@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcsThrust = 100f;
+    [SerializeField] float mainThrust = 15f;
+    [SerializeField] int health = 100;
+    [SerializeField] int fuel = 1000;
+    [SerializeField] int fuelCost = 1;
+    private int levelStart = 0;
 
     enum KeyAction
     {
@@ -21,8 +27,7 @@ public class Rocket : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-
+    {        
         particleSystem = GetComponent<ParticleSystem>();
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
@@ -32,6 +37,36 @@ public class Rocket : MonoBehaviour
     void Update()
     {
         ProcessInput();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "LandingPad":
+                levelStart++;
+                SceneManager.LoadScene(levelStart);
+                print("WIN!!!");
+                break;
+            case "Friendly":
+                print("FRIENDS");
+                break;
+            case "Fuel":
+                print("Fuel Added");
+                fuel += 10;
+                break;
+            default:
+                health = 0;
+                levelStart = 0;
+                print($"Damage Taken {health} remaining");
+                break;
+        }
+
+        if (health < 1)
+        {            
+            print("YOU DIED");
+            SceneManager.LoadScene(levelStart);
+        }
     }
 
     private void ProcessInput()
@@ -55,8 +90,11 @@ public class Rocket : MonoBehaviour
     }
     private void Thrust()
     {
+        if (fuel < 1) { print("Out Of Fuel"); return; }
         float thrustPerFrame = 3 * Time.deltaTime;
-        rigidBody.AddRelativeForce(Vector3.up * 3);
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+        fuel -= fuelCost;
+        print($"Fuel:{fuel}");
         if (!audioSource.isPlaying)
         {
             audioSource.Play();
