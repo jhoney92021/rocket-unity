@@ -10,25 +10,41 @@ public class Rocket : MonoBehaviour
     [SerializeField] int health = 100;
     [SerializeField] int fuel = 1000;
     [SerializeField] int fuelCost = 1;
-    private int levelStart = 0;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip death;
+    [SerializeField] AudioClip win;
+
+    [SerializeField] ParticleSystem deathParticleSystem;
+    [SerializeField] ParticleSystem winParticleSystem;
+
+    private int currentLevelIdx = 0;
 
     enum KeyAction
     {
         Thrust = KeyCode.Space,
         RotateLeft = KeyCode.A,
         RotateRight = KeyCode.D
-
     }
 
+    enum PlayerState
+    {
+        Alive,
+        Dying,
+        Trancending
+    }
+
+    PlayerState playerState = PlayerState.Alive;
+
     KeyAction action;
-    ParticleSystem particleSystem;
+    
     Rigidbody rigidBody;
     AudioSource audioSource;
+    ParticleSystem thrustParticleSystem;
 
     // Start is called before the first frame update
     void Start()
-    {        
-        particleSystem = GetComponent<ParticleSystem>();
+    {
+        thrustParticleSystem = GetComponentInChildren<ParticleSystem>();
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
     }
@@ -36,17 +52,20 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ProcessInput();
+        if (playerState == PlayerState.Alive)
+        {
+            ProcessInput();
+        }
+        print($"Level:  {currentLevelIdx}");
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (playerState != PlayerState.Alive) { return; }
         switch (collision.gameObject.tag)
         {
             case "LandingPad":
-                levelStart++;
-                SceneManager.LoadScene(levelStart);
-                print("WIN!!!");
+                StartSuccessSequence();
                 break;
             case "Friendly":
                 print("FRIENDS");
@@ -56,17 +75,45 @@ public class Rocket : MonoBehaviour
                 fuel += 10;
                 break;
             default:
-                health = 0;
-                levelStart = 0;
-                print($"Damage Taken {health} remaining");
+                TakeDamage();
                 break;
         }
 
-        if (health < 1)
-        {            
-            print("YOU DIED");
-            SceneManager.LoadScene(levelStart);
+        CheckPlayerHealth();
+    }
+
+    private void TakeDamage()
+    {
+        health /= 2;
+        print($"Damage Taken {health} remaining");
+    }
+
+    private void CheckPlayerHealth()
+    {
+        if (health < 1 || fuel < 1)
+        {
+            playerState = PlayerState.Dying;
+            currentLevelIdx = 0;
+            audioSource.PlayOneShot(death);
+            deathParticleSystem.Play();
+            print($"YOU DIED HEALTH {health} FUEL {fuel}");
+            Invoke("LoadNextScene", 1f);//TODO: parameterize time
         }
+    }
+
+    private void StartSuccessSequence()
+    {
+        playerState = PlayerState.Trancending;
+        currentLevelIdx += 1;
+        audioSource.PlayOneShot(win);
+        winParticleSystem.Play();
+        Invoke("LoadNextScene", 1f);//TODO: parameterize time
+        print("WIN!!!");
+    }
+
+    private void LoadNextScene()
+    {
+        SceneManager.LoadScene(currentLevelIdx);
     }
 
     private void ProcessInput()
@@ -94,20 +141,20 @@ public class Rocket : MonoBehaviour
         float thrustPerFrame = 3 * Time.deltaTime;
         rigidBody.AddRelativeForce(Vector3.up * mainThrust);
         fuel -= fuelCost;
-        print($"Fuel:{fuel}");
+        //print($"Fuel:{fuel}");
         if (!audioSource.isPlaying)
         {
-            audioSource.Play();
+            audioSource.PlayOneShot(mainEngine);
         }
-        if (!particleSystem.isPlaying)
+        if (!thrustParticleSystem.isPlaying)
         {
-            particleSystem.Play();
+            thrustParticleSystem.Play();
         }
     }
     private void StopThrust()
     {
         audioSource.Stop();
-        particleSystem.Stop();
+        thrustParticleSystem.Stop();
     }
     private void OnInputRotateShip()
     {
