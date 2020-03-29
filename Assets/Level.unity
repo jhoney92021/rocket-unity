@@ -200,6 +200,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7be40ad57aecdb4388c4e3c6ff2d270, type: 3}
+--- !u!1 &641686964 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3571166594656937995, guid: 2c3e7fe27bc64604e9c06917cd0ee77c,
+    type: 3}
+  m_PrefabInstance: {fileID: 737645698}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &641686969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641686964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bedd38abaf781894390f5734f6d074fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementVector: {x: 0, y: 0, z: 10}
+  period: 1
 --- !u!1001 &737645698
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -286,11 +306,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -1577634131298348224, guid: 1b47a384eab08f44b8406ae79c1536b2,
-        type: 3}
-      propertyPath: ShapeModule.m_Texture
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 7572799724756066064, guid: 1b47a384eab08f44b8406ae79c1536b2,
         type: 3}
       propertyPath: m_Name

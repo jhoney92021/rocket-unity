@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Ship\Rocket.cs" />
+    <Compile Include="Assets\Terrain\Oscillator.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/jhoney92021/unity/ProjectBoost/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -7,9 +7,12 @@ public class Rocket : MonoBehaviour
 {
     [SerializeField] float rcsThrust = 100f;
     [SerializeField] float mainThrust = 15f;
+    [SerializeField] float loadDelay = 2f;
+
     [SerializeField] int health = 100;
     [SerializeField] int fuel = 1000;
     [SerializeField] int fuelCost = 1;
+
     [SerializeField] AudioClip mainEngine;
     [SerializeField] AudioClip death;
     [SerializeField] AudioClip win;
@@ -97,7 +100,7 @@ public class Rocket : MonoBehaviour
             audioSource.PlayOneShot(death);
             deathParticleSystem.Play();
             print($"YOU DIED HEALTH {health} FUEL {fuel}");
-            Invoke("LoadNextScene", 1f);//TODO: parameterize time
+            Invoke("LoadNextScene", loadDelay);//TODO: parameterize time
         }
     }
 
@@ -107,7 +110,7 @@ public class Rocket : MonoBehaviour
         currentLevelIdx += 1;
         audioSource.PlayOneShot(win);
         winParticleSystem.Play();
-        Invoke("LoadNextScene", 1f);//TODO: parameterize time
+        Invoke("LoadNextScene", loadDelay);//TODO: parameterize time
         print("WIN!!!");
     }
 

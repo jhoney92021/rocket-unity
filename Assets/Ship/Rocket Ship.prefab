@@ -69,13 +69,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rcsThrust: 100
   mainThrust: 9
+  loadDelay: 2
   health: 100
   fuel: 300
   fuelCost: 1
   mainEngine: {fileID: 8300000, guid: 6c0ae9eb6dac8954a905233b12b50820, type: 3}
   death: {fileID: 8300000, guid: 2358f44826eae364189647ba9f1dfbf3, type: 3}
   win: {fileID: 8300000, guid: 0f691f0180decfe429c25e41eaea99dd, type: 3}
-  thrustParticleSystem: {fileID: 0}
   deathParticleSystem: {fileID: 5939094039360011341}
   winParticleSystem: {fileID: 1206192725924380149}
 --- !u!82 &2731659516049810800
